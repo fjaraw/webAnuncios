@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<ul>
+		<!--{% for entry in entries %} -->
+			<li><h2>{{ entry.title }}</h2>
+			<h5>{{ entry.description }}</h3>	
+			{% if  entry.image  %}
+				<img src="{{url_for('static', filename='files/'+entry.image)}}" class="img-polaroid" border="10" width="50%">
+			{% endif %}
+			<h5>{{ entry.ubicacion }}. Anuncio creado por: {{ entry.fk_id_user }}</h3>	
+			{% else %}	
+				<li><em>No existen anuncios</em>
+  </ul>
+		<!{% endfor %} >
+{% endblock content %}
+
