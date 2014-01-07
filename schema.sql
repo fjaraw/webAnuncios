@@ -1,4 +1,7 @@
 drop table if exists entries;
+
+--tabla de anuncios
+
 create table entry (
   id integer primary key autoincrement,
   title text not null,
@@ -10,6 +13,7 @@ create table entry (
 	FOREIGN KEY (fk_id_user) REFERENCES user (user)
 );
 
+--tabla de usuarios
 
 create table user (
   ids integer primary key autoincrement,
@@ -20,6 +24,8 @@ create table user (
 	tel text not null,
 	mail text not null
 );
+
+--poblar tabla de anuncios
 
 insert into entry (title, description, ubicacion, image, tag, fk_id_user) values ("Arriendo Casa", "Casa con dos dormitorios, un baño, cocina americana.","Valdivia", "1.jpg", "a","admin");
 insert into entry (title, description, ubicacion, image, tag, fk_id_user) values ("Venta Casa", "Increíble oportunidad: 5 dormitorios, 3 baños, aplio espacio, entrada de vehiculo.","Osorno", "2.jpg", "v","jperez");
@@ -33,6 +39,8 @@ insert into entry (title, description, ubicacion, image, tag, fk_id_user) values
 insert into entry (title, description, ubicacion, image, tag, fk_id_user) values ("Copa del mundo 2014", "La Copa Mundial de la FIFA Brasil 2014 será la XX edición de la Copa Mundial de Fútbol. Esta versión del torneo se realizará en Brasil entre el 12 de junio y el 13 de julio de 2014.","Brasil", "10.jpg", "s","pedro189");
 insert into entry (title, description, ubicacion, image, tag, fk_id_user) values ("Lollapalooza Chile 2014", "Red Hot Chili Peppers, Nine Inch Nails y Phoenix protagonizarán la primera jornada de Lollapalooza Chile 2014, mientras que Soundgarden, Arcade Fire y Pixies serán los encargados de cerrar el festival, que se celebrará el 29 y 30 de marzo en el Parque O’Higgins.","Santiago", "11.jpg", "s","admin");
 insert into entry (title, description, ubicacion, image, tag, fk_id_user) values ("Bierfest Kunstmann 2014", "Entre el 30 de enero y el 2 de febrero se realizará una nueva versión de la Bierfest Kunstmann 2014 en Valdivia.","Valdivia", "12.jpg", "s","jperez");
+
+--poblar datos de usuarios
 
 insert into user (name, user, pass, dir, tel, mail) values ("Administrador", "admin", "1234","Los robles 123", "12345678", "admin@admin.com");
 insert into user (name, user, pass, dir, tel, mail) values ("Juanito Perez", "jperez", "12345", "Picarte 123", "76542321", "jperez@gmail.com");
