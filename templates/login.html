@@ -6,7 +6,7 @@
 {% block menu %}
 {% endblock menu %}
 {% block content %}
-
+<!--inicio de sesion-->
   <form class="form-signin" name="login" action="{{url_for('login')}}" method="post">
     <h2 class="form-signin-heading">Ingrese al sistema</h2>
       <input type="text" class="form-control" placeholder="Nombre de usuario" required autofocus name="user">
@@ -14,9 +14,11 @@
       <label class="checkbox">
         <input type="checkbox" value="remember-me"> Recordar
       </label>
+      <!--boton ingresar-->
       <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
 	  <button type="button"><a href="{{url_for('signup')}}">Registrar</a></button>
       {% if error %}
+      <!--mensaje de error-->
         <span class="label label-danger">{{ error }}</span>
       {%  endif %}
 </form>
