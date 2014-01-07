@@ -4,6 +4,7 @@
 
 <!--documento quedetermina los elementos basicos del sitio web -->
 
+<!--estilo css-->
 {% block head %}
     <title>{% block title %}WebAnuncios{% endblock %}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -35,6 +36,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+      <!--pagina principal y modulo de busqueda-->
       <a class="navbar-brand" href="{{url_for('search')}}">WebAnuncios</a>
     </div>
     <div class="collapse navbar-collapse">
@@ -46,8 +48,11 @@
              <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ session.name }} <b class="caret"></b></a>
               <ul class="dropdown-menu">
+                <!--configurar cuenta-->
                 <li><a href="{{url_for('config')}}">Configuración de la cuenta</a></li>
+                <!--ver anuncios publicados por el usuario-->
                 <li><a href="{{url_for('anuncios')}}">Mis Anuncios</a></li>
+                <!--log out de la cuenta-->
                 <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
               </ul>
             </li>
