@@ -2,6 +2,7 @@
 
 {% block content %}
  <!{% for entry in entries %}>
+ <!--formulario para actualizar datos de usuario (nombre, password, direccion, fono, correo)-->
 <form class="form-horizontal" role="form" name="input" action="{{ url_for('config2') }}" method="POST" enctype="multipart/form-data">
 
 	<div class="form-group">
@@ -35,12 +36,14 @@
 		</div>
         </div>	
         <hr>
+        <!--boton actualizar: renueva los datos de usuario-->
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
             <input type="submit" value="Actualizar" class="btn btn-default">
             </div>
         </div>
         {% if error %}
+        <!--mensaje de error-->
         <span class="label label-danger col-sm-offset-2 col-sm-12">Un error ha ocurrido: {{ error }}</span>
         {%  endif %}
   <!{% endfor %}>
