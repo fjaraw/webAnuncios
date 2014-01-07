@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import mechanize
 from functools import wraps
 from sqlite3 import dbapi2 as sqlite3
 from flask import (Flask,
@@ -100,6 +99,7 @@ def show_entries():
     return render_template('show_entries.html', entries=entries)
 
 
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -108,7 +108,7 @@ def login():
 	hash_pass = hashlib.sha512((salt + password).encode('utf-8')).hexdigest()
         db = get_db()
         result = db.execute('select name, user from user where user=? and pass = ?', 
-                            [user, password])
+                            [user, hash_pass])
         matches = result.fetchall()
         if len(matches) > 0: #The user and pass combination exits
             user_data = matches[0]
@@ -137,13 +137,13 @@ def signup():
         	db = get_db()
        	 	cursor = db.cursor()
         	cursor.execute('insert into user (name, user, pass, dir, tel, mail) values (?, ?, ?, ?, ?, ?)',
-                     [request.form['name'], request.form['user'], request.form['password'], request.form['dir'], request.form['tel'], request.form['e-mail']])
+                     [request.form['name'], request.form['user'], hashlib.sha512((salt + request.form['password']).encode('utf-8')).hexdigest(), request.form['dir'], request.form['tel'], request.form['e-mail']])
         	db.commit()
         	user = request.form["user"]
         	password = request.form["password"]
 		hash_pass = hashlib.sha512((salt + password).encode('utf-8')).hexdigest()
         	result = db.execute('select name, user from user where user=? and pass = ?', 
-                            [user, password])
+                            [user, hash_pass])
         	matches = result.fetchall()
         	if len(matches) > 0: #The user and pass combination exits
             		user_data = matches[0]
@@ -158,7 +158,6 @@ def signup():
         return render_template('signup.html')
 
 
-@app.route('/')
 @app.route('/search', methods=['GET', 'POST'])
 def search():    
 	if request.method == 'POST':
@@ -175,24 +174,25 @@ def search():
 		return render_template('search.html')
 
 
-@app.route('/config', methods=['GET', 'POST'])
-def config():	
+@app.route('/config')
+def config():
 	u = session.get("user")
 	db = get_db()
   	cur = db.execute('select name, pass, dir, tel, mail from user where user=?',(u,))
   	entries = cur.fetchall()
-  	return render_template('config.html', entries=entries)
+	return render_template('config.html', entries=entries)
+
+@app.route('/setup', methods=['GET', 'POST'])
+def config2():
 	if request.method == 'POST':
 		if len(request.form['name']) >= 2:
+			u = session.get('user')
 			db = get_db()
-			cursor = db.cursor()
-			query="""UPDATE user set name=?, pass=?, dir=?, tel=?, mail=? where id=1"""
-			result=db.execute(query,[request.form["name"], request.form["pass"], request.form["dir"], request.form["tel"], request.form["e-mail"]])
+			cursor=db.execute('UPDATE user set name=?, pass=?, dir=?, tel=?, mail=? where user=?',(request.form["name"], hashlib.sha512((salt + request.form["pass"]).encode('utf-8')).hexdigest(), request.form["dir"], request.form["tel"], request.form["e-mail"], u))			
 			db.commit()
-			flash('Usuario actualizado correctamente')
-			return redirect(url_for('show_entries', entries=entries))
+  			return redirect(url_for('config'))	
 		else:
-			return redirect(url_for('config', error = u"El nombre no puede ser vacío"))
+			return redirect(url_for('config2', error = u"El nombre no puede ser vacío"))
 	else:
 		return render_template('config.html')
 
