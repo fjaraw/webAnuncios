@@ -22,13 +22,13 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY=u'0moHo~#3CD`M/:6'
 ))
-
+#conexion con base de datos
 def connect_db():
     """Connects to the specific database."""
     rv = sqlite3.connect(app.config['DATABASE'])
     rv.row_factory = sqlite3.Row
     return rv
-
+#incicaliza base de datos
 def init_db():
     """Creates the database tables."""
     with app.app_context():
@@ -36,7 +36,7 @@ def init_db():
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
-
+# obtener base de datos
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -44,13 +44,13 @@ def get_db():
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
     return g.sqlite_db
-
+#cerrar base de datos
 def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-
+#inicio de sesion
 def logged_in(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -60,13 +60,13 @@ def logged_in(f):
             flash('Please log in first.', 'error')
             return redirect(url_for('login'))
     return decorated_function
-
+#formulario de anuncio
 @app.route('/form')
 @app.route('/form/<error>')
 @logged_in
 def form(error=None):
     return render_template('form.html', error=error)
-
+#agregar anuncio
 @app.route('/add', methods=['POST'])
 @logged_in
 def add_entry():
@@ -89,7 +89,7 @@ def add_entry():
         return redirect(url_for('show_entries'))
     else:
         return redirect(url_for('form', error = u"El título no puede ser vacío"))
-
+#modulo principal
 @app.route('/index')
 @logged_in
 def show_entries():
@@ -98,7 +98,7 @@ def show_entries():
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 
-
+#iniciar sesion
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -122,14 +122,14 @@ def login():
     else:
         return render_template('login.html')
 
-
+#cierre de sesion
 @app.route('/logout')
 @logged_in
 def logout():
     # remove the user from the session if it's there
     session.pop('user')
     return redirect(url_for('login'))
-
+#registrar usuario
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():	
     if request.method == 'POST':
@@ -157,7 +157,7 @@ def signup():
     else:
         return render_template('signup.html')
 
-
+#busqueda
 @app.route('/search', methods=['GET', 'POST'])
 def search():    
 	if request.method == 'POST':
@@ -173,7 +173,7 @@ def search():
 	else:
 		return render_template('search.html')
 
-
+#configurar cuenta
 @app.route('/config')
 def config():
 	u = session.get("user")
@@ -195,7 +195,7 @@ def config2():
 			return redirect(url_for('config2', error = u"El nombre no puede ser vacío"))
 	else:
 		return render_template('config.html')
-
+#filtros de busqueda
 @app.route('/index/<ids>')
 @logged_in
 def route(ids):
